@@ -1,9 +1,9 @@
 const { Recipe, User } = require('../models');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 class RecipeController {
     static findAll(req, res, next) {
-        console.log(req.query, ['< < < < QUERY']);
-        
         Recipe.findAll({
             order: [['updatedAt', 'DESC']],
             include: ['User']
@@ -97,11 +97,38 @@ class RecipeController {
                 } else {
                     next({
                         status: 404,
-                        message: 'Product not found'
+                        message: 'Recipe not found'
                     })
                 }
             })
             .catch(err => next(err))
+    }
+
+    static search(req, res, next) {
+        const { term } = req.query;
+        console.log(term, ['<<<<<<']);
+
+        Recipe.findAll({
+            where: {
+                title: {
+                    [Op.like]: `%${term}%`
+                }
+            }
+        })
+            .then(recipes => {
+                if (recipes.length > 0) {
+                    res.status(200).json(recipes)
+                } else {
+                    next({
+                        status: 404,
+                        message: 'No recipes found'
+                    })
+                }
+            })
+            .catch(err => { 
+                console.log(['you are here on error']);
+                next(err)
+            })
     }
 }
 

@@ -14,16 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     story: DataTypes.STRING,
-    serving: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: 'Serving cannot be empty'
-        }
-      }
-    },
+    serving: DataTypes.STRING,
     ingredients: DataTypes.ARRAY(DataTypes.STRING),
     cooking_duration: DataTypes.STRING,
     steps: DataTypes.ARRAY(DataTypes.STRING),
