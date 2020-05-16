@@ -1,6 +1,8 @@
 const { Recipe } = require('../models/index');
 
 function authorization(req, res, next) {
+    console.log(['D E L E T E = = = = = ']);
+
     Recipe.findOne({
         where: {
             id: req.params.id

@@ -2,6 +2,7 @@ const { verify } = require('../helpers/jwt');
 const { User } = require('../models/index');
 
 module.exports = function(req, res, next) {
+    
     try {
         req.decoded = verify(req.headers.token);
         User.findOne({
@@ -9,7 +10,8 @@ module.exports = function(req, res, next) {
                 id: req.decoded.id
             }
         })
-            .then(user => {
+        .then(user => {
+            console.log(['D E L E T E = = = = = ']);
                 if (user) {
                     req.currentUserId = user.id;
                     next();
@@ -19,9 +21,11 @@ module.exports = function(req, res, next) {
                 return null
             })
             .catch(err => {
+                console.log(['? ? ? ? ERROR = = = = = ']);
                 res.status(500).json(err)
             })
     } catch (err) {
+        console.log(['? ? ? ? catch = = = = = ']);
         res.status(401).json({ status: 401, message: 'Login required'})
     }
 }

@@ -5,7 +5,7 @@ const Op = Sequelize.Op;
 class RecipeController {
     static findAll(req, res, next) {
         Recipe.findAll({
-            order: [['updatedAt', 'DESC']],
+            order: [['createdAt', 'DESC']],
             include: ['User']
         })
             .then(recipes => res.status(200).json(recipes))
@@ -82,6 +82,7 @@ class RecipeController {
 
     static delete(req, res, next) {
         let id = req.params.id;
+        console.log(['D E L E T E ', {id}]);
         let deletedRecipe;
         Recipe.findByPk(id)
             .then(recipe => {

@@ -10,6 +10,6 @@ router.get('/by/:userid', RecipeController.findAllByUserId);
 router.post('/', authentication, RecipeController.add);
 router.use(authentication);
 router.put('/:id', authorization, RecipeController.update);
-router.delete('/:id', RecipeController.delete)
+router.delete('/:id', authorization, RecipeController.delete);
 
 module.exports = router;
