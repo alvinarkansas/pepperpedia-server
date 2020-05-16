@@ -110,9 +110,17 @@ class RecipeController {
 
         Recipe.findAll({
             where: {
-                title: {
-                    [Op.like]: `%${term}%`
-                }
+                [Op.or]: [
+                    {
+                        title: {
+                            [Op.like]: `%${term}%`
+                        }
+                    }, {
+                        tags: {
+                            [Op.contains]: [term.toLowerCase()]
+                        }
+                    }
+                ]
             },
             order: [['updatedAt', 'DESC']],
         })
@@ -126,7 +134,7 @@ class RecipeController {
                     })
                 }
             })
-            .catch(err => { 
+            .catch(err => {
                 console.log(['you are here on error']);
                 next(err)
             })

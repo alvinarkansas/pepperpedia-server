@@ -1,4 +1,6 @@
 'use strict';
+const generateTags = require('../helpers/generateTags');
+
 module.exports = (sequelize, DataTypes) => {
   class Recipe extends sequelize.Sequelize.Model { }
 
@@ -21,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
     thumbnail: DataTypes.STRING,
     tags: DataTypes.ARRAY(DataTypes.STRING)
   }, {
+    hooks: {
+      beforeCreate: (Recipe, options) => {
+        Recipe.tags = generateTags(Recipe.title);
+      }
+    },
     sequelize,
     modelName: 'Recipe'
   })
