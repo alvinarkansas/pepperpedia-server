@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Recipe } = require('../models');
 const { generateToken } = require('../helpers/jwt');
 const { comparePassword } = require('../helpers/bcrypt');
 
@@ -9,16 +9,22 @@ class UserController {
             last_name: req.body.last_name,
             email: req.body.email,
             password: req.body.password,
-            profile_picture: req.body.profile_picture,
+            profile_picture: '',
+            bio: '',
+            location: ''
         })
             .then(newUser => {
                 const payload = { id: newUser.id, name: newUser.name, email: newUser.email };
                 const token = generateToken(payload);
-                res.status(201).json({ 
-                    token, 
-                    first_name: newUser.first_name ,
+                res.status(201).json({
+                    token,
+                    id: newUser.id,
+                    first_name: newUser.first_name,
                     last_name: newUser.last_name,
-                    profile_picture: newUser.profile_picture
+                    profile_picture: newUser.profile_picture,
+                    email: newUser.email,
+                    bio: newUser.bio,
+                    location: newUser.location
                 });
             })
             .catch(err => {
@@ -44,11 +50,15 @@ class UserController {
 
                         const payload = { id: user.id, name: user.name, email: user.email };
                         const token = generateToken(payload);
-                        res.status(200).json({ 
-                            token, 
-                            first_name: user.first_name ,
+                        res.status(200).json({
+                            token,
+                            id: user.id,
+                            first_name: user.first_name,
                             last_name: user.last_name,
-                            profile_picture: user.profile_picture
+                            profile_picture: user.profile_picture,
+                            email: user.email,
+                            bio: user.bio,
+                            location: user.location
                         });
                     } else {
                         next({
@@ -66,6 +76,69 @@ class UserController {
             .catch(err => {
                 next(err)
             })
+    }
+
+    static findOne(req, res, next) {
+        const { id } = req.params;
+        let finalResult = {};
+        User.findOne({
+            where: {
+                id
+            }
+        })
+            .then(user => {
+                if (user) {
+                    finalResult.user = user;
+                    return Recipe.findAll({
+                        where: {
+                            UserId: id
+                        },
+                        order: [['updatedAt', 'DESC']],
+                    })
+                } else {
+                    next({
+                        status: 404,
+                        message: 'User Not Found'
+                    })
+                }
+            })
+            .then(recipes => {
+                finalResult.userRecipe = recipes;
+                res.status(200).json(finalResult);
+            })
+            .catch(err => next(err))
+    }
+
+    static editProfile(req, res, next) {
+        const { first_name, last_name, profile_picture, bio, location } = req.body;
+        User.findOne({
+            where: {
+                id: req.currentUserId
+            }
+        })
+            .then(user => {
+                if (user) {
+                    User.update({
+                        first_name,
+                        last_name,
+                        profile_picture,
+                        bio,
+                        location
+                    }, {
+                        where: {
+                            id: user.id
+                        },
+                        returning: true
+                    })
+                        .then(updatedUser => res.status(200).json(updatedUser[1][0]))
+                } else {
+                    next({
+                        status: 404,
+                        message: 'User Not Found'
+                    })
+                }
+            })
+            .catch(err => next(err))
     }
 }
 

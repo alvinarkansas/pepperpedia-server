@@ -113,7 +113,8 @@ class RecipeController {
                 title: {
                     [Op.like]: `%${term}%`
                 }
-            }
+            },
+            order: [['updatedAt', 'DESC']],
         })
             .then(recipes => {
                 if (recipes.length > 0) {

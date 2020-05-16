@@ -47,6 +47,8 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     profile_picture: DataTypes.STRING,
+    bio: DataTypes.STRING,
+    location: DataTypes.STRING
   }, {
     hooks: {
       beforeCreate: (User, options) => {
