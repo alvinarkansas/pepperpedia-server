@@ -140,6 +140,57 @@ class UserController {
             })
             .catch(err => next(err))
     }
+
+    // 496829458942-doegmj99js14rjg7hhd43gdul7jg6kii.apps.googleusercontent.com
+    static googleSignIn(req, res, next) {
+        let obj = {};
+        const token = req.headers.token;
+        const { OAuth2Client } = require('google-auth-library');
+        const client = new OAuth2Client(process.env.CLIENT_ID);
+        client.verifyIdToken({
+            idToken: token,
+            audience: process.env.CLIENT_ID
+        })
+            .then(response => {
+                console.log(response.payload, ['< < < GOOOGLE']);
+                obj.email = response.payload.email;
+                obj.name = response.payload.name;
+                // return User.findOne({
+                //     where: {
+                //         email: obj.email
+                //     }
+                // })
+            })
+            // .then(user => {
+            //     if (!user) {
+            //         return User.create({
+            //             first_name: req.body.first_name,
+            //             last_name: req.body.last_name,
+            //             email: req.body.email,
+            //             password: req.body.password,
+            //             password: process.env.DEFAULT_PASSWORD,
+            //             profile_picture: '',
+            //             bio: '',
+            //             location: '',
+
+            //             name: obj.name,
+            //             email: obj.email,
+            //         })
+            //     } else {
+            //         return user;
+            //     }
+            // })
+            // .then(user => {
+            //     const payload = { id: user.id, name: user.name, email: user.email }
+            //     const access_token = generateToken(payload);
+            //     res.status(201).json({ access_token, name: payload.name })
+            //     console.log('login google successsssss', access_token);
+                
+            // })
+            .catch(err => {
+                console.log(err);
+            })
+    }
 }
 
 module.exports = UserController;
