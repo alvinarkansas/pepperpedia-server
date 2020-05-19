@@ -60,6 +60,8 @@ module.exports = (sequelize, DataTypes) => {
   })
   User.associate = function(models) {
     User.hasMany(models.Recipe)
+    User.hasMany(models.Cookmark)
+    // User.belongsToMany(models.Recipe, { through: 'Cookmark' })
   };
   return User;
 };

@@ -34,6 +34,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Recipe.associate = function (models) {
     Recipe.belongsTo(models.User)
+    Recipe.hasMany(models.Cookmark)
+    // Recipe.belongsToMany(models.User, { through: 'Cookmark' })
   };
   return Recipe;
 };

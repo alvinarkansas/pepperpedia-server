@@ -11,7 +11,6 @@ module.exports = function(req, res, next) {
             }
         })
         .then(user => {
-            console.log(['D E L E T E = = = = = ']);
                 if (user) {
                     req.currentUserId = user.id;
                     next();
