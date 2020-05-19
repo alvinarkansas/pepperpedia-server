@@ -67,6 +67,23 @@ class CookmarkController {
             })
             .catch(err => next(err))
     }
+
+    static check(req, res, next) {
+        Cookmark.findOne({
+            where: {
+                RecipeId: req.body.RecipeId,
+                UserId: req.currentUserId
+            }
+        })
+            .then(cookmark => {
+                if (cookmark) {
+                    res.status(200).json(true);
+                } else {
+                    res.status(200).json(false);
+                }
+            })
+            .catch(err => next(err))
+    }
 }
 
 module.exports = CookmarkController;

@@ -5,6 +5,7 @@ const { cookmarkAuthorization } = require('../middlewares/authorization');
 
 router.get('/', authentication, CookmarkController.getUserCookmark);
 router.post('/', authentication, CookmarkController.addToCookmark);
+router.post('/check', authentication, CookmarkController.check);
 router.use(authentication);
 router.delete('/:id', cookmarkAuthorization, CookmarkController.remove);
 
