@@ -11,7 +11,7 @@ module.exports = function(req, res, next) {
             }
         })
         .then(user => {
-                if (user) {
+            if (user) {
                     req.currentUserId = user.id;
                     next();
                 } else {

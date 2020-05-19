@@ -42,18 +42,23 @@ class CookmarkController {
     }
 
     static remove(req, res, next) {
-        let id = +req.params.id;
-        console.log(['D E L E T E ', { id }]);
-        let deletedCookmark;
-        Cookmark.findByPk(id)
-            .then(cookmark => {
-                console.log(cookmark, ['id maybe']);
+        // let id = +req.params.id;
 
-                if (cookmark) {
+        console.log(['D E L E T E ', req.params.id, req.currentUserId]);
+        let deletedCookmark;
+        Cookmark.findOne({
+            where: {
+                UserId: req.currentUserId,
+                RecipeId: req.params.id
+            }
+        })
+            .then(cookmark => {
+                console.log(cookmark, ['< - < - < -']);
+                if (cookmark !== null) {
                     deletedCookmark = cookmark
                     Cookmark.destroy({
                         where: {
-                            id
+                            id: cookmark.id
                         }
                     })
                         .then(_ => res.status(200).json(deletedCookmark))
@@ -65,7 +70,10 @@ class CookmarkController {
                     })
                 }
             })
-            .catch(err => next(err))
+            .catch(err => {
+                console.log(['? ? ? ? lmslmslmlsmls = = = = = ']);
+                next(err)
+            })
     }
 
     static check(req, res, next) {

@@ -5,7 +5,7 @@ const usersRoutes = require('./users');
 const cookmarksRoutes = require('./cookmarks');
 
 router.get('/', (req, res) => {
-    res.json('> > > > Welcome To cook API < < < <')
+    res.json('> > > > Welcome To Pepperpedia API < < < <')
 })
 
 router.use('/users', usersRoutes);

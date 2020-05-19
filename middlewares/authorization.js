@@ -29,7 +29,7 @@ function recipeAuthorization(req, res, next) {
 function cookmarkAuthorization(req, res, next) {
     Cookmark.findOne({
         where: {
-            id: req.params.id
+            RecipeId: req.params.id
         }
     })
         .then(cookmark => {
